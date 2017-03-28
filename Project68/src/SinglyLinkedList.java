@@ -1,5 +1,7 @@
 import sun.security.util.Length;
 
+import javax.swing.undo.CannotUndoException;
+import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -9,18 +11,21 @@ import java.util.List;
 // tjdals9745
 // edit from work PC
 
-
 public class SinglyLinkedList {
     private ListNode head;
 
     private static class ListNode{
-
         private int data;
         private ListNode next;
 
         public ListNode(int data){
             this.data = data;
             this.next = null;
+        }
+
+        @Override
+        public String toString(){
+            return Integer.toString(this.data);
         }
     }
 
@@ -33,7 +38,7 @@ public class SinglyLinkedList {
             currentNode = currentNode.next;
         }
 
-        System.out.println(currentNode);
+            System.out.println(currentNode);
     }
 
     public int length(ListNode head){
@@ -76,7 +81,7 @@ public class SinglyLinkedList {
             return head;
 
         }
-        this.head = head;
+        //his.head = head;
         return head;
     }
 
@@ -153,7 +158,6 @@ public class SinglyLinkedList {
 
         if(head == null){
             return null;
-
         }
         while(curNode != null){
             if(curNode.data == data){
@@ -183,29 +187,169 @@ public class SinglyLinkedList {
         return prevNode;
     }
 
+    public ListNode findStartOfCycleInLinkedListFloydDetection(ListNode head){
+        boolean hasLoop = false;
+        ListNode slow = head;
+        ListNode fast = head;
+
+        while(slow != null && fast != null){
+            fast = fast.next;
+            if(fast == slow){
+                hasLoop = true;
+                slow = head;
+                while( slow == fast){
+                    slow = slow.next;
+                    fast = fast.next;
+                }
+                return fast;
+            }
+            if(fast == null) return null;
+            fast = fast.next;
+            if(fast == slow){ //found!
+                hasLoop = true;
+                slow = head;
+                while( slow == fast){
+                    slow = slow.next;
+                    fast = fast.next;
+                }
+                return fast;
+            }
+            slow = slow.next;
+        }
+        return null;
+    }
+
+    public boolean hasCycleInLinkedListHashTable(ListNode head){
+        Hashtable<ListNode,Integer> myTable = new Hashtable<ListNode,Integer>();
+        boolean isFound = false;
+
+        if(head == null){
+            System.out.println("LL is empty");
+            return isFound;
+        }
+        int position = 1;
+        int loopPos = 0;
+
+        ListNode current = head;
+        myTable.put(current, position);
+        current = current.next;
+
+        while(current != null){
+            if(myTable.containsKey(current)) {
+                loopPos = myTable.get(current);
+                System.out.println("loop found at position " + loopPos);
+                isFound = true;
+                break;
+            }else{
+                myTable.put(current,position);
+            }
+            current = current.next;
+            position++;
+        }
+        return isFound;
+    }
+
     public static void main(String[] args){
-        ListNode head = new ListNode(10);
-        ListNode second = new ListNode(8);
-        ListNode third = new ListNode(1);
-        ListNode fourth = new ListNode(11);
-
-        //attach Nodes
-
-        head.next = second;
-        second.next = third;
-        third.next = fourth;
-
 
         SinglyLinkedList singlyLinkedList = new SinglyLinkedList();
 
-        head = singlyLinkedList.insertAtPosition(head, 21, 1);
-        head = singlyLinkedList.insertAtPosition(head, 42, 4);
+        ListNode head = new ListNode(2);
+        ListNode second = new ListNode(8);
+        ListNode third = new ListNode(10);
+        ListNode fourth = new ListNode(11);
+        ListNode fifth = new ListNode(25);
+        ListNode sixth = new ListNode(136);
+        ListNode seventh = new ListNode(857);
+        ListNode eighth = new ListNode(3332);
+
+        //attach Nodes
+        head.next = second;
+        second.next = third;
+        third.next = fourth;
+        fourth.next = fifth;
+        fifth.next = sixth;
+        sixth.next = seventh;
+        seventh.next = eighth;
+        //eighth.next = third;
+
+        //singlyLinkedList.display(head);
+        //System.out.println("sdsfd");
+        //System.out.println(singlyLinkedList.hasCycleInLinkedListHashTable(head));
+       // System.out.println(singlyLinkedList.hasCycleInLinkedListFloydDetection(head));
+        //head = singlyLinkedList.insertAtPosition(head, 21, 1);
+        //head = singlyLinkedList.insertAtPosition(head, 42, 4);
+        //singlyLinkedList.display(head);
+        //System.out.println(singlyLinkedList.length(head));
+
+        singlyLinkedList.display(head);
+//.insertInSortedLinkedList(head,100);
+        singlyLinkedList.insertInSortedLinkedList(head,1);
 
 
         singlyLinkedList.display(head);
 
-        System.out.println(singlyLinkedList.length(head));
-        //d///isplay(head);
+        //System.out.println(singlyLinkedList.findStartOfCycleInLinkedListFloydDetection(head));
+    }
 
+
+    private ListNode insertInSortedLL(ListNode head, int data){
+        ListNode current = head;
+        ListNode newNode = new ListNode(data);
+        ListNode prevToCur = null;
+        if(head == null) return newNode;
+
+        while(current != null && current.data < data){
+            prevToCur = current;
+            current = current.next;
+        }
+        prevToCur.next = newNode;
+        newNode.next = current;
+        return head;
+    }
+
+
+
+        private ListNode insertInSortedLinkedListSolution(ListNode head, int data) {
+            ListNode current = head;
+            ListNode newNode = new ListNode(data);
+            ListNode prevToCurrent = null;
+            if(head == null) return newNode;
+
+            while(current != null && current.data < data){
+            //    current = current.next;
+                prevToCurrent = current;
+                current = current.next;
+            }
+            newNode.next = current;
+            prevToCurrent.next =newNode;
+            return head;
+        }
+
+        private void insertInSortedLinkedList(ListNode head, int data) {
+        ListNode nodeToInsert = new ListNode(data);
+        ListNode current = head;
+        ListNode prevToCurrent = null;
+        if(current == null) {
+            head = nodeToInsert;
+            return;
+        }else{
+            while(current != null){
+                if(current.data < data){
+                    prevToCurrent = current;
+                    current = current.next;
+                }else{//bigger node found insert the node before this one.
+
+                    //first node is bigger
+                    if(prevToCurrent == null){
+                        nodeToInsert.next = head;
+                        head = nodeToInsert;
+                    }else{
+                        prevToCurrent.next = nodeToInsert;
+                        nodeToInsert.next = current;
+                    }
+                    break;
+                }
+            }
+        }
     }
 }
