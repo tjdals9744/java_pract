@@ -288,6 +288,12 @@ public class SinglyLinkedList {
 
         singlyLinkedList.display(head);
 
+        int[] A = {2,36,2667,42,6,2,5};
+        int[] B = {36,2667,42,6,2,5};
+        System.out.println(checkDuplicatesBruteForce(A));
+        System.out.println(checkDuplicatesBruteForce(B));
+
+
         //System.out.println(singlyLinkedList.findStartOfCycleInLinkedListFloydDetection(head));
     }
 
@@ -351,5 +357,49 @@ public class SinglyLinkedList {
                 }
             }
         }
+    }
+
+    private static boolean checkDuplicatesBruteForce(int A[]){
+        for(int i=0; i<A.length; i++){
+            for(int j= i+1; j < A.length; j++){
+                if(A[i] == A[j]) return true;
+            }
+        }
+        return false;
+    }
+
+    ListNode findIntersectingNode(ListNode list1, ListNode list2){
+        int L1=0, L2=0, diff=0;
+        ListNode head1 = list1, head2 = list2;
+        while(head1 != null){
+            L1++;
+            head1 = head1.next;
+        }
+        while(head2 != null){
+            L2++;
+            head2 = head2.next;
+        }
+
+        diff = L1-L2;
+
+        if(L1 < L2){
+            head1 = list2;
+            head2 = list1;
+            diff = L2 - L1;
+            diff = L2 - L1;
+        }
+
+        for(int i=0; i< diff; i++){
+            head1 = head1.next;
+        }
+
+        while(head1 != null && head2 != null){
+            if(head1 == head2){
+                return head1;
+            }
+            head1 = head1.next;
+            head2 = head2.next;
+        }
+        return null;
     }
 }
