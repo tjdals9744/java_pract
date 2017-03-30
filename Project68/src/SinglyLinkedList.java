@@ -51,6 +51,55 @@ public class SinglyLinkedList {
         return size;
     }
 
+    /**
+     *
+     * @param head
+     * @param nodeToInsert
+     * @return return head of the modified node
+     */
+    public ListNode insertAtEndWithNode(ListNode head, ListNode nodeToInsert){
+        //ListNode nodeToInsert = new ListNode(data);
+        ListNode current = head;
+        ListNode header = head;
+
+        if(head == null){
+            return nodeToInsert;
+        }
+
+        //reach last node current => lastnode
+        while(current.next != null){
+            current = current.next;
+        }
+
+        current.next = nodeToInsert;
+        return header;
+    }
+
+
+    /**
+     *
+     * @param head
+     * @param data
+     * @return return head of the modified node
+     */
+    public ListNode insertAtEnd(ListNode head, int data){
+        ListNode nodeToInsert = new ListNode(data);
+        ListNode current = head;
+        ListNode header = head;
+
+        if(head == null){
+            return nodeToInsert;
+        }
+
+        //reach last node current => lastnode
+        while(current.next != null){
+            current = current.next;
+        }
+
+        current.next = nodeToInsert;
+        return header;
+    }
+
     public ListNode insertAtPosition(ListNode head, int data, int position){
         //ListNode currentNode = null;
         //ListNode prevNode = null;
@@ -253,23 +302,40 @@ public class SinglyLinkedList {
 
         SinglyLinkedList singlyLinkedList = new SinglyLinkedList();
 
-        ListNode head = new ListNode(2);
-        ListNode second = new ListNode(8);
-        ListNode third = new ListNode(10);
-        ListNode fourth = new ListNode(11);
-        ListNode fifth = new ListNode(25);
-        ListNode sixth = new ListNode(136);
-        ListNode seventh = new ListNode(857);
-        ListNode eighth = new ListNode(3332);
+        ListNode head1 = new ListNode(2);
+        ListNode second1 = new ListNode(4);
+        ListNode third1 = new ListNode(10);
+        ListNode fourth1 = new ListNode(11);
+        ListNode fifth1 = new ListNode(100);
+
+        ListNode head2 = new ListNode(1);
+        ListNode second2 = new ListNode(4);
+        ListNode third2 = new ListNode(7);
+        ListNode fourth2 = new ListNode(59);
+        ListNode fifth2 = new ListNode(111);
+
+
+        //ListNode fifth = new ListNode(25);
+/*        ListNode sixth = new ListNode(136);
+        ListNode seventh = new ListNode(857);*/
+        //ListNode eighth = new ListNode(3332);
 
         //attach Nodes
-        head.next = second;
-        second.next = third;
-        third.next = fourth;
-        fourth.next = fifth;
-        fifth.next = sixth;
-        sixth.next = seventh;
-        seventh.next = eighth;
+        head1.next = second1;
+        second1.next = third1;
+        third1.next = fourth1;
+        fourth1.next = fifth1;
+
+        //attach Nodes
+        head2.next = second2;
+        second2.next = third2;
+        third2.next = fourth2;
+        fourth2.next = fifth2;
+
+
+/*        fifth.next = sixth;
+        sixth.next = seventh;*/
+        //seventh.next = eighth;
         //eighth.next = third;
 
         //singlyLinkedList.display(head);
@@ -281,20 +347,63 @@ public class SinglyLinkedList {
         //singlyLinkedList.display(head);
         //System.out.println(singlyLinkedList.length(head));
 
-        singlyLinkedList.display(head);
+        //singlyLinkedList.display(head);
 //.insertInSortedLinkedList(head,100);
-        singlyLinkedList.insertInSortedLinkedList(head,1);
+        //singlyLinkedList.insertInSortedLinkedList(head,1);
 
 
-        singlyLinkedList.display(head);
+        singlyLinkedList.display(head1);
 
-        int[] A = {2,36,2667,42,6,2,5};
-        int[] B = {36,2667,42,6,2,5};
-        System.out.println(checkDuplicatesBruteForce(A));
-        System.out.println(checkDuplicatesBruteForce(B));
+        singlyLinkedList.display(head2);
+        System.out.println(singlyLinkedList.mergeTwoSortedLL(head1,head2));
 
-
+        //int[] A = {2,36,2667,42,6,2,5};
+        //int[] B = {36,2667,42,6,2,5};
+        //System.out.println(checkDuplicatesBruteForce(A));
+        //System.out.println(checkDuplicatesBruteForce(B));
+        //System.out.println(singlyLinkedList.findMiddle(head));
+        //System.out.println(singlyLinkedList.findMiddle(head));
+        //findMiddleSolutiontwoPointer
         //System.out.println(singlyLinkedList.findStartOfCycleInLinkedListFloydDetection(head));
+        //printListBackward
+        //System.out.println(singlyLinkedList.findMiddleWithOneSearch(head));
+        //System.out.println("sdsdf");
+        //singlyLinkedList.printListBackward(head);
+        //System.out.println(singlyLinkedList.findMiddleSolutiontwoPointer(head));
+    }
+
+
+    private ListNode mergeTwoSortedLL(ListNode head1, ListNode head2){
+        ListNode cur1 = head1;
+        ListNode cur2 = head2;
+        ListNode head3 = null;
+
+        if(cur1 == null) return head2;
+        if(cur2 == null) return head1;
+
+        SinglyLinkedList mySLL= new SinglyLinkedList();
+        while(cur1 != null || cur2 != null){
+            if(cur1.data > cur2.data){
+                ListNode nodeToInsert = new ListNode(cur2.data);
+                mySLL.insertAtEndWithNode(head3, nodeToInsert);
+                cur2 = cur2.next;
+            }else{
+                mySLL.insertAtEnd(head3, cur1.data);
+                cur1 = cur1.next;
+            }
+        }
+
+        //same length
+        if(cur1 != null && cur2 == null){
+            return head1;
+
+        //list1 iteration ended faster than list2
+        }else if(cur1 == null && cur2 != null){
+            return mySLL.insertAtEndWithNode(head3, cur2);
+        }else{//list2 iteration ended faster than list1
+            return mySLL.insertAtEndWithNode(head3, cur1);
+        }
+
     }
 
 
@@ -401,5 +510,110 @@ public class SinglyLinkedList {
             head2 = head2.next;
         }
         return null;
+    }
+
+    ListNode findMiddle(ListNode head){
+        ListNode cur = head;
+        int count = 0;
+        while(cur != null){
+            count++;
+            cur = cur.next;
+        }
+        if(count %2 == 0){
+            System.out.println("list is even ");
+            return null;
+        }else{
+            count/=2;
+            cur = head;
+            for(int i=1; i<= count; i++){
+                cur=cur.next;
+            }
+            return cur;
+        }
+    }
+
+    ListNode findMiddleWithOneSearch(ListNode head){
+        ListNode slow = head, fast= head;
+        if(head == null){
+            System.out.println("empty list");
+            return null;
+        }
+
+        /*slow = slow.next;
+        fast = fast.next;
+        */
+        while(fast != null){
+            fast = fast.next;
+
+            if(fast == null){
+                System.out.println("ODD ! return slow ");
+                return slow;
+            }
+            slow = slow.next;
+            fast = fast.next;
+        }//if null, it means the list is even
+        System.out.println("Even list, return null");
+        return null;
+    }
+
+    ListNode findMiddleSolutiontwoPointer(ListNode head){
+        ListNode ptr1x, ptr2x;
+        ptr1x = ptr2x = head;
+
+        int i=0;
+        //repeat until reaching the end
+        //next value after last node is null
+
+        while(ptr1x.next != null){
+            if(i == 0){
+                ptr1x = ptr1x.next;
+                i = 1;
+            }else if(i==1){
+                ptr1x = ptr1x.next;
+                //increase both
+                ptr2x = ptr2x.next;
+                i=0;
+            }
+        }
+        return ptr2x;
+    }
+
+    void printListBackward(ListNode head){
+        ListNode tmp;
+        ListNode current = head;
+
+        //initial condition
+        if(current == null){
+            System.out.println(" null");
+            return;
+        }
+
+        if(current.next == null){
+            System.out.print(" null --> " + current + " --> ");
+            return;
+        }
+
+        tmp = current;
+        current = current.next;
+
+        printListBackward(current);
+        System.out.print(tmp + " --> ");
+    }
+
+    void PrintFromEndRecursive(ListNode head){
+        if(head == null) return;
+        PrintFromEndRecursive(head.next);
+        System.out.print(head + " -> ");
+
+    }
+
+    boolean IsLinkedListLengthEven(ListNode head){
+        while(head != null && head.next != null) {
+            head = head.next.next;
+        }if(head != null){
+            System.out.println("Odd");
+            return false;
+        }else return true;
+
     }
 }
