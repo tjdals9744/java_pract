@@ -52,7 +52,6 @@ public class SinglyLinkedList {
     }
 
     /**
-     *
      * @param head
      * @param nodeToInsert
      * @return return head of the modified node
@@ -63,7 +62,8 @@ public class SinglyLinkedList {
         ListNode header = head;
 
         if(head == null){
-            return nodeToInsert;
+            header = nodeToInsert;
+            return header;
         }
 
         //reach last node current => lastnode
@@ -74,7 +74,6 @@ public class SinglyLinkedList {
         current.next = nodeToInsert;
         return header;
     }
-
 
     /**
      *
@@ -135,8 +134,6 @@ public class SinglyLinkedList {
     }
 
     /**
-     *
-     *
      * @param head
      * @return deletedNode
      */
@@ -298,6 +295,39 @@ public class SinglyLinkedList {
         return isFound;
     }
 
+
+
+  /*  ListNode exchangeAdjacentNode(ListNode head){
+        ListNode currNode,temp, nextNode;
+        currNode = head;
+
+        if(currNode == null || currNode == null) return null;
+                head = currNode.next;
+        while(head != null && head.next != null){
+            temp = head.next;
+
+
+        }
+    }
+*/
+    ListNode GetKPlusOneThNode(int K, ListNode head){
+        ListNode Kth;
+        int i;
+        if(head != null) return head;
+
+        for(i=0, Kth = head; Kth != null &&(i < K); i++){
+            Kth = Kth.next;
+
+            if(i == K && Kth != null){
+                return Kth;
+            }
+            return head.next;
+        }
+
+
+
+    }
+
     public static void main(String[] args){
 
         SinglyLinkedList singlyLinkedList = new SinglyLinkedList();
@@ -306,7 +336,7 @@ public class SinglyLinkedList {
         ListNode second1 = new ListNode(4);
         ListNode third1 = new ListNode(10);
         ListNode fourth1 = new ListNode(11);
-        ListNode fifth1 = new ListNode(100);
+        //ListNode fifth1 = new ListNode(100);
 
         ListNode head2 = new ListNode(1);
         ListNode second2 = new ListNode(4);
@@ -314,6 +344,7 @@ public class SinglyLinkedList {
         ListNode fourth2 = new ListNode(59);
         ListNode fifth2 = new ListNode(111);
 
+        ListNode head3;
 
         //ListNode fifth = new ListNode(25);
 /*        ListNode sixth = new ListNode(136);
@@ -324,7 +355,7 @@ public class SinglyLinkedList {
         head1.next = second1;
         second1.next = third1;
         third1.next = fourth1;
-        fourth1.next = fifth1;
+        //fourth1.next = fifth1;
 
         //attach Nodes
         head2.next = second2;
@@ -353,9 +384,14 @@ public class SinglyLinkedList {
 
 
         singlyLinkedList.display(head1);
+        //singlyLinkedList.ReverseListRecursive(head1);
+        singlyLinkedList.ReverseListRepeat(head1);
+        singlyLinkedList.display(head1);
 
-        singlyLinkedList.display(head2);
-        System.out.println(singlyLinkedList.mergeTwoSortedLL(head1,head2));
+//        singlyLinkedList.display(head2);
+
+        //head3 = singlyLinkedList.mergeTwoSortedLL(head1,head2);
+        //singlyLinkedList.display(head3);
 
         //int[] A = {2,36,2667,42,6,2,5};
         //int[] B = {36,2667,42,6,2,5};
@@ -372,6 +408,55 @@ public class SinglyLinkedList {
         //System.out.println(singlyLinkedList.findMiddleSolutiontwoPointer(head));
     }
 
+    void ReverseListRepeat(ListNode head){
+        ListNode tmp1, tmp2, current = head;
+
+        while(current != null && current.next != null){
+            //flip pairs:  current && current next
+            tmp1 = current.next;
+            tmp2 = tmp1.next;
+
+            tmp1.next = current;
+            current.next = tmp2;
+
+            if(current != null) {
+                current = current.next;
+            }
+        }
+
+    }
+
+    void ReverseListRecursive(ListNode head){
+        ListNode tmp, header;
+        header = head;
+
+        //if the List is empty of there is one node (not enough to flip)
+        if(head == null || head.next == null){
+            return;
+        }
+
+        tmp = header.next;
+        header.next = tmp.next;
+        tmp.next = header;
+
+        ReverseListRecursive(header.next);
+    }
+
+
+    ListNode MergeList(ListNode a, ListNode b){
+        ListNode result = null;
+        if(a == null) return b;
+        if(b == null) return a;
+
+        if(a.data <= b.data){
+            result = a;
+            result.next = (MergeList(a.next, b));
+        }else{
+            result = b;
+            result.next = (MergeList(b.next, a));
+        }
+        return result;
+    }
 
     private ListNode mergeTwoSortedLL(ListNode head1, ListNode head2){
         ListNode cur1 = head1;
@@ -382,26 +467,29 @@ public class SinglyLinkedList {
         if(cur2 == null) return head1;
 
         SinglyLinkedList mySLL= new SinglyLinkedList();
-        while(cur1 != null || cur2 != null){
+        while(cur1 != null && cur2 != null){
             if(cur1.data > cur2.data){
                 ListNode nodeToInsert = new ListNode(cur2.data);
-                mySLL.insertAtEndWithNode(head3, nodeToInsert);
+                head3 = mySLL.insertAtEndWithNode(head3, nodeToInsert);
                 cur2 = cur2.next;
             }else{
-                mySLL.insertAtEnd(head3, cur1.data);
+                ListNode nodeToInsert = new ListNode(cur1.data);
+                head3 = mySLL.insertAtEndWithNode(head3, nodeToInsert);
                 cur1 = cur1.next;
             }
         }
 
         //same length
-        if(cur1 != null && cur2 == null){
-            return head1;
+        if(cur1 == null && cur2 == null){
+            return head3;
 
         //list1 iteration ended faster than list2
         }else if(cur1 == null && cur2 != null){
-            return mySLL.insertAtEndWithNode(head3, cur2);
+            head3 = mySLL.insertAtEndWithNode(head3, cur2);
+            return head3;
         }else{//list2 iteration ended faster than list1
-            return mySLL.insertAtEndWithNode(head3, cur1);
+            head3 = mySLL.insertAtEndWithNode(head3, cur1);
+            return head3;
         }
 
     }
@@ -613,7 +701,18 @@ public class SinglyLinkedList {
         }if(head != null){
             System.out.println("Odd");
             return false;
-        }else return true;
+    }else return true;
 
     }
+
+    int HasKnodes(ListNode head , int K){
+        int i;
+        for(i=0; head != null && (i<K); i++, head = head.next);
+
+        if(i==K)
+            return 1;
+        return 0;
+    }
+
+//
 }
